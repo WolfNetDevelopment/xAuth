@@ -132,7 +132,7 @@ public class xAuthPlayerListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
-    public void onPlayerChat(PlayerChatEvent event) {
+    public void onPlayerChat(AsyncPlayerChatEvent event) {
         xAuthPlayer p = playerManager.getPlayer(event.getPlayer());
         if (playerManager.isRestricted(p, event)) {
             playerManager.sendNotice(p);
