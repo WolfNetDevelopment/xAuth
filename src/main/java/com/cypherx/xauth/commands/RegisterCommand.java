@@ -42,14 +42,18 @@ public class RegisterCommand implements CommandExecutor {
         if (sender instanceof Player) {
             xAuthPlayer p = plugin.getPlayerManager().getPlayer((Player) sender);
 
-            if ((plugin.getConfig().getBoolean("registration.require-email") && args.length < 2) || args.length < 1) {
+            if ((plugin.getConfig().getBoolean("registration.require-email") && args.length < 3) || args.length < 2) {
                 plugin.getMessageHandler().sendMessage("register.usage", p.getPlayer());
+                return true;
+            }
+            if(args[0].equalsIgnoreCase(args[1])) {
+                plugin.getMessageHandler().sendMessage("register.confirm-failed", p.getPlayer());
                 return true;
             }
 
             String playerName = p.getPlayerName();
             String password = args[0];
-            String email = args.length > 1 ? args[1] : null;
+            String email = args.length > 2 ? args[2] : null;
 
             Auth a = plugin.getAuthClass(p);
             boolean success = a.register(playerName, password, email);
