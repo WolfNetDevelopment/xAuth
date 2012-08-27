@@ -47,13 +47,16 @@ public class RegisterCommand implements CommandExecutor {
                 return true;
             }
             if((plugin.getConfig().getBoolean("registration.require-password-confirm")) && (!args[0].equalsIgnoreCase(args[1]))) {
-                plugin.getMessageHandler().sendMessage("register.confirm-failed", p.getPlayer());
+                plugin.getMessageHandler().sendMessage("register.error.confirm", p.getPlayer());
                 return true;
             }
             
             String playerName = p.getPlayerName();
             String password = args[0];
-            String email = args.length > 2 ? args[2] : null;
+            String email = args.length > 1 ? args[2] : null;
+            if(plugin.getConfig().getBoolean("registration.require-password-confirm")) {
+                email = args.length > 2 ? args[2] : null;
+            }
 
             Auth a = plugin.getAuthClass(p);
             boolean success = a.register(playerName, password, email);
