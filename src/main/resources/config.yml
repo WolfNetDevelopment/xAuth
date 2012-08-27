@@ -33,6 +33,7 @@ single-session:
 registration:
     enabled: true
     forced: true
+    require-password-confirm: true
     require-email: false
     validate-email: false
     account-limit: 0
