@@ -74,6 +74,9 @@ public class AuthSQL extends Auth {
         } else if (!isWithinAccLimit(player.getIPAddress())) {
             response = "register.error.limit";
             return false;
+        } else if (!isValidNickname(user)) {
+            response = "register.error.nickname";
+            return false;
         } else if (!isValidPass(pass)) {
             response = "register.error.password";
             return false;
@@ -197,6 +200,10 @@ public class AuthSQL extends Auth {
         return limit > count;
     }
 
+    private boolean isValidNickname(String nickname) {   
+        return Pattern.compile("^[a-zA-Z0-9]+$").matcher(nickname).matches(); 
+    }
+    
     private boolean isValidPass(String pass) {
         String pattern = "(";
 
