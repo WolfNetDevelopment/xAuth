@@ -58,6 +58,7 @@ public class LoginCommand implements CommandExecutor {
                     if (xAuth.getPlugin().isAuthURL() && xAuth.getPlugin().getConfig().getBoolean("authurl.broadcast-login") && response != null && response != "")
                         xAuth.getPlugin().getServer().broadcastMessage(response);
                     response = "login.success";
+                    xAuth.getPlugin().getServer().broadcastMessage(ChatColor.GREEN + p.getPlayerName() + ChatColor.RESET + ChatColor.GOLD + " logged in");
                     a.online(p.getPlayerName());
                     xAuthLog.info(playerName + " authenticated");
                 } else
