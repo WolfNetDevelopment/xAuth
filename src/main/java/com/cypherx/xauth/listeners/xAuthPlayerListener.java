@@ -61,6 +61,7 @@ public class xAuthPlayerListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerLogin(final PlayerLoginEvent event) {
+        event.setJoinMessage("");
         if (!event.getResult().equals(Result.ALLOWED))
             return;
 
