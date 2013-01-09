@@ -14,6 +14,7 @@ register:
         disabled: '{RED}Registrations are currently disabled!'
         registered: '{RED}You are already registered!'
         limit: '{RED}You may not register any more accounts!'
+        nickname: '{RED} Your nickname contains illegal characters!'
         password: '{RED}Your password must be at least {PWMINLENGTH} characters long!'
         email: '{RED}Please use a valid email address when registering!'
         general: '{RED}Something went wrong while creating your account!'
