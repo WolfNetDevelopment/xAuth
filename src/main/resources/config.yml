@@ -1,5 +1,5 @@
 main:
-    auto-disable: true
+    auto-disable: false
     check-for-updates: true
     reload-on-join: false
 mysql:
