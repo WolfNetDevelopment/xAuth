@@ -75,6 +75,9 @@ public class LoginCommand extends xAuthCommand implements CommandExecutor {
                 this.callEvent(xAuthLoginEvent.Action.PLAYER_LOGIN, xp.getStatus());
 
                 xAuthLog.info(playerName + " authenticated");
+
+                if (xAuth.getPlugin().isAuthURL() && xAuth.getPlugin().getConfig().getBoolean("authurl.groups"))
+                    xAuth.getPermissionManager().joinGroup(xp.getPlayer(), a.getGroup());
             } else {
                 response = "login.error.general";
             }
