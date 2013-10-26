@@ -188,7 +188,8 @@ public class AuthMethodURL extends AuthMethod {
             BufferedReader in = new BufferedReader(new InputStreamReader(uc.getInputStream()));
             String line = in.readLine();
             boolean success = line != null && line.equals("YES");
-            response = in.readLine();
+            if (plugin.getConfig().getBoolean("authurl.broadcast-login"))
+                response = in.readLine();
             if (plugin.getConfig().getBoolean("authurl.groups"))
                 group = in.readLine();
             in.close();
