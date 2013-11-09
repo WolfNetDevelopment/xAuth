@@ -25,6 +25,7 @@ import de.luricos.bukkit.xAuth.utils.xAuthLog;
 import de.luricos.bukkit.xAuth.utils.xAuthUtils;
 import de.luricos.bukkit.xAuth.xAuth;
 import de.luricos.bukkit.xAuth.xAuthPlayer;
+
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
@@ -32,8 +33,18 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.player.*;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.event.player.PlayerCommandPreprocessEvent;
+import org.bukkit.event.player.PlayerDropItemEvent;
+import org.bukkit.event.player.PlayerGameModeChangeEvent;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerLoginEvent.Result;
+import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerPickupItemEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 
 import java.sql.Timestamp;
 
@@ -157,15 +168,6 @@ public class xAuthPlayerListener extends xAuthEventListener {
         plugin.getPlayerManager().getTasks().cancelTasks(playerName);
 
         this.callEvent(xAuthPlayerQuitEvent.Action.PLAYER_DISCONNECTED);
-    }
-
-    @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
-    public void onPlayerChat(PlayerChatEvent event) {
-        if (this.hasPlayerChatPermission(event.getPlayer(), event))
-            return;
-
-        event.setCancelled(true);
-        this.callEvent(xAuthPlayerChatEvent.Action.CHAT_CANCELLED, playerManager.getPlayer(event.getPlayer().getName()).getStatus());
     }
 
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
