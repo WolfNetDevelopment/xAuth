@@ -19,17 +19,22 @@
  */
 package de.luricos.bukkit.xAuth.commands;
 
+import de.luricos.bukkit.xAuth.MessageHandler;
 import de.luricos.bukkit.xAuth.events.*;
 import de.luricos.bukkit.xAuth.restrictions.PlayerRestrictionHandler;
 import de.luricos.bukkit.xAuth.xAuth;
 import de.luricos.bukkit.xAuth.xAuthPlayer;
 import org.bukkit.Bukkit;
+import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 /**
  * @author lycano
  */
 public class xAuthCommand {
+
+    private MessageHandler messageHandler = xAuth.getPlugin().getMessageHandler();
 
     protected void callEvent(final xAuthChangePasswordEvent event) {
         Bukkit.getPluginManager().callEvent(event);
@@ -79,11 +84,19 @@ public class xAuthCommand {
         this.callEvent(new xAuthResetPasswordEvent(action, status));
     }
 
+    protected boolean isAllowedCommand(final CommandSender sender, final String messageNode, final String... command) {
+        return (sender instanceof ConsoleCommandSender) || this.isAllowedCommand((Player) sender, messageNode, command);
+    }
+
     protected boolean isAllowedCommand(final Player player, final String messageNode, final String... command) {
         boolean allowed = new PlayerRestrictionHandler(player, "PlayerCommandPreProcessEvent", command).hasPermission();
         if (!allowed)
             xAuth.getPlugin().getMessageHandler().sendMessage(messageNode, player);
 
         return allowed;
+    }
+
+    protected MessageHandler getMessageHandler() {
+        return this.messageHandler;
     }
 }

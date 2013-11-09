@@ -36,13 +36,10 @@ public class LogoutCommand extends xAuthCommand implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         args = CommandLineTokenizer.tokenize(args);
 
-        if (!(sender instanceof Player))
-            return false;
-
-        Player player = (Player) sender;
-        if (!this.isAllowedCommand(player, "logout.permission", "logout"))
+        if (!this.isAllowedCommand(sender, "logout.permission", "logout"))
             return true;
 
+        Player player = (Player) sender;
         xAuthPlayer xp = xAuth.getPlugin().getPlayerManager().getPlayer(player);
         String response;
 
@@ -61,7 +58,7 @@ public class LogoutCommand extends xAuthCommand implements CommandExecutor {
             response = "logout.error.logged";
         }
 
-        xAuth.getPlugin().getMessageHandler().sendMessage(response, player);
+        this.getMessageHandler().sendMessage(response, player);
         //@TODO do we need idle kick after logout? Should it also respect mustRegister?
 
         return true;
