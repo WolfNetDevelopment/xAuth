@@ -1,8 +1,6 @@
 xAuth
 =====
-
 Authentication plugin for bukkit powered servers
-
 Fixes
 ====
 1. IP sessions FIX, allow to does not remember sessions for users, who uses same ip.
