@@ -8,3 +8,6 @@ Fixes
    IP/IPRange will be configurable in config.
 
    Also wanna add /loginonce command, to force short session login.
+2. Deny account registration for specified IP-Ranges.
+   
+   IP/IPRange will be configurable in config.
