@@ -331,7 +331,7 @@ public class PlayerManager {
         if (getPlayer(userName).isPremium())
             return true;
 
-        HTTPRequest httpRequest = new HTTPRequest(String.format("http://minecraft.net/haspaid.jsp?user=%s", userName));
+        HTTPRequest httpRequest = new HTTPRequest(String.format("https://minecraft.net/haspaid.jsp?user=%s", userName));
         return Boolean.parseBoolean(httpRequest.getContent());
     }
 
