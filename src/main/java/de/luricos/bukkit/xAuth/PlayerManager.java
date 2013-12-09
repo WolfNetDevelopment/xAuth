@@ -549,7 +549,8 @@ public class PlayerManager {
                 updateLastLogin(accountId, ipAddress, currentTime);
 
             // insert session if session.length > 0
-            if (plugin.getDatabaseController().isTableActive(Table.SESSION))
+            if (plugin.getDatabaseController().isTableActive(Table.SESSION)
+                && !checkSession(xp))
                 createSession(accountId, ipAddress);
 
             // clear strikes
