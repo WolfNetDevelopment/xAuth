@@ -331,8 +331,12 @@ public class PlayerManager {
         if (getPlayer(userName).isPremium())
             return true;
 
-        HTTPRequest httpRequest = new HTTPRequest(String.format("http://minecraft.net/haspaid.jsp?user=%s", userName));
-        return Boolean.parseBoolean(httpRequest.getContent());
+        HTTPRequest httpRequest = new HTTPRequest(String.format("https://minecraft.net/haspaid.jsp?user=%s", userName), 500, 500);
+
+        if(httpRequest.getStatus() != 200)
+            return false;
+
+        return httpRequest.getContent().equals("true");
     }
 
     public void sendNotice(final xAuthPlayer player) {
@@ -549,7 +553,8 @@ public class PlayerManager {
                 updateLastLogin(accountId, ipAddress, currentTime);
 
             // insert session if session.length > 0
-            if (plugin.getDatabaseController().isTableActive(Table.SESSION))
+            if (plugin.getDatabaseController().isTableActive(Table.SESSION)
+                && !checkSession(xp))
                 createSession(accountId, ipAddress);
 
             // clear strikes

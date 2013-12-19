@@ -27,6 +27,7 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.net.HttpURLConnection;
 
 /**
  * @author lycano
@@ -34,15 +35,19 @@ import java.net.URLConnection;
 public class HTTPRequest {
 
     private URL url;
-    private URLConnection connection;
+    private HttpURLConnection connection;
     private BufferedReader inputStream;
     private String content;
+    private int status;
 
     public HTTPRequest(final String url) {
         this(url, 30, 30);
     }
 
     public HTTPRequest(final String uri, final int connectTimeout, final int readTimeout) {
+        this.content = null;
+        this.status = -1;
+
         try {
             this.url = new URL(uri);
         } catch (MalformedURLException e) {
@@ -51,7 +56,7 @@ public class HTTPRequest {
         }
 
         try {
-            this.connection = this.url.openConnection();
+            this.connection = (HttpURLConnection)this.url.openConnection();
             this.getConnection().setConnectTimeout(connectTimeout);
             this.getConnection().setReadTimeout(readTimeout);
             this.inputStream = new BufferedReader(new InputStreamReader(this.getUrl().openStream()));
@@ -63,11 +68,13 @@ public class HTTPRequest {
             }
 
             this.content = contents.toString();
+            this.status = this.connection.getResponseCode();
         } catch (IOException e) {
             xAuthLog.warning("Error during HTTPRequest: " + e.getMessage());
         } finally {
             try {
-                this.inputStream.close();
+                if (this.inputStream != null)
+                    this.inputStream.close();
             } catch (IOException e) {
                 xAuthLog.warning(String.format("HTTPRequest: Could not close stream - %s", e.getMessage()));
             }
@@ -88,5 +95,9 @@ public class HTTPRequest {
 
     public String getContent() {
         return this.content;
+    }
+
+    public int getStatus() {
+        return this.status;
     }
 }
