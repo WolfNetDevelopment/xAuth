@@ -40,6 +40,10 @@ registration:
     account-limit: 0
     activation: false
     require-login: true
+    blacklist:
+      enabled: false
+      ip-ranges: 
+        - 127.0.0.1-127.0.0.10
 password:
     default-type: 0
     convert-password: false
@@ -81,6 +85,10 @@ session:
     length: 3600
     verifyip: true
     godmode-length: 5
+    blacklist:
+      enabled: false
+      ip-ranges: 
+        - 127.0.0.1-127.0.0.10
 strikes:
     amount: 5
     lockout-length: 3600
