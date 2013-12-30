@@ -36,6 +36,7 @@ import java.util.regex.Pattern;
 
 public class AuthMethodSQL extends AuthMethod {
     private final xAuthPlayer player;
+    private final xAuth plugin;
 
     public AuthMethodSQL(final xAuth plugin, final xAuthPlayer player) {
         this.plugin = plugin;
@@ -80,6 +81,9 @@ public class AuthMethodSQL extends AuthMethod {
         } else if (!isValidEmail(email)) {
             response = "register.error.email";
             return false;
+        }else if (isIpInBlacklist(player.getIPAddress())){
+            response = "register.error.ipblacklisted";
+        	return false;
         }
 
         return execRegQuery(user, pass, email, false);
@@ -278,5 +282,9 @@ public class AuthMethodSQL extends AuthMethod {
 
     private boolean isValidEmail(String email) {
         return !plugin.getConfig().getBoolean("registration.validate-email") || EmailValidatorFactory.EMAIL.isValid(email);
+    }
+    
+    private boolean isIpInBlacklist(String ipAdress){
+    	return plugin.getPlayerManager().isIpInBlacklist(ipAdress);
     }
 }
