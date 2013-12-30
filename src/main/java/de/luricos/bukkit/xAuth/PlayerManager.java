@@ -19,6 +19,28 @@
  */
 package de.luricos.bukkit.xAuth;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
+import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
+
+import de.luricos.bukkit.xAuth.xAuth;
+import de.luricos.bukkit.xAuth.xAuthPlayer;
 import de.luricos.bukkit.xAuth.commands.xAuthPlayerCountType;
 import de.luricos.bukkit.xAuth.database.Table;
 import de.luricos.bukkit.xAuth.events.xAuthPlayerProtectEvent;
@@ -30,17 +52,6 @@ import de.luricos.bukkit.xAuth.tasks.xAuthTasks;
 import de.luricos.bukkit.xAuth.updater.HTTPRequest;
 import de.luricos.bukkit.xAuth.utils.xAuthLog;
 import de.luricos.bukkit.xAuth.utils.xAuthUtils;
-import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
-import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
-import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
-
-import java.sql.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public class PlayerManager {
     private final xAuth plugin;
@@ -549,14 +560,14 @@ public class PlayerManager {
                 updateLastLogin(accountId, ipAddress, currentTime);
 
             // insert session if session.length > 0
-            if (plugin.getDatabaseController().isTableActive(Table.SESSION))
+            if (isIpSessionIgnored(ipAddress) == false && plugin.getDatabaseController().isTableActive(Table.SESSION))
                 createSession(accountId, ipAddress);
 
             // clear strikes
             plugin.getStrikeManager().getRecord(ipAddress).clearStrikes(xp.getName());
 
             // clear reset flag
-            plugin.getPlayerManager().setResetState(accountId, false);
+            plugin.getPlayerManager().unSetReset(accountId);
 
             unprotect(xp);
             xp.setLoginTime(currentTime);
@@ -714,4 +725,51 @@ public class PlayerManager {
 
         return allowed;
     }
+    
+	public int ip2Int(String ip) {
+		int intip = 0;
+		try {
+			InetAddress ia = InetAddress.getByName(ip); 
+			for (byte b: ia.getAddress()){  
+				intip = intip << 8 | (b & 0xFF);  
+			}
+    	  } catch (UnknownHostException e) {}
+    	  return intip;
+	}
+  
+	public boolean isIpInRange(String sIP, String sRange) {
+		int ip = ip2Int(sIP);
+		String[] range = sRange.split("-");
+		if (ip!=0 && range.length == 2) {
+			int min = ip2Int(range[0]);
+			int max = ip2Int(range[1]);
+			return min <= ip && ip <= max;
+		} else {
+			return false;
+		}
+	}
+	
+	public boolean isIpSessionIgnored(String ipAddress){
+        if (plugin.getConfig().getBoolean("session.blacklist.enabled")) {
+        	List<String> ipRanges = plugin.getConfig().getStringList("session.blacklist.ip-ranges");
+        	for (Iterator<String> ipRange = ipRanges.iterator(); ipRange.hasNext(); ) {
+        		if (isIpInRange(ipAddress, (String)ipRange.next())) {
+        			return true;
+        		}
+        	}
+        }
+		return false;
+	}
+	
+	public boolean isIpInBlacklist(String ipAddress){
+        if (plugin.getConfig().getBoolean("registration.blacklist.enabled")) {
+        	List<String> ipRanges = plugin.getConfig().getStringList("registration.blacklist.ip-ranges");
+        	for (Iterator<String> ipRange = ipRanges.iterator(); ipRange.hasNext(); ) {
+        		if (isIpInRange(ipAddress, (String)ipRange.next())) {
+        			return true;
+        		}
+        	}
+        }
+		return false;
+	}
 }
