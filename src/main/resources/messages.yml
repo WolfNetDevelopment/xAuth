@@ -15,6 +15,7 @@ register:
     permission: '{RED}You do not have permission to use the register command!'
     success: '{BRIGHTGREEN}You have successfully registered!{NEWLINE}{BRIGHTGREEN}You may now log in using /login <password>'
     error:
+        ipblacklisted: '{RED}Your ip is blacklisted! Please contact administrator!'
         disabled: '{RED}Registrations are currently disabled!'
         registered: '{RED}You are already registered!'
         limit: '{RED}You may not register any more accounts!'
