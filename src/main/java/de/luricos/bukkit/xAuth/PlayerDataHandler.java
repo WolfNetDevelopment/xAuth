@@ -245,6 +245,9 @@ public class PlayerDataHandler {
 
         // Use cached copy of player data, if it exists
         PlayerData playerData = xp.getPlayerData();
+        boolean hideInv = plugin.getConfig().getBoolean("guest.hide-inventory");
+        boolean hideLoc = plugin.getConfig().getBoolean("guest.protect-location");
+
         if (playerData != null) {
             items = playerData.getItems();
             armor = playerData.getArmor();
@@ -266,8 +269,13 @@ public class PlayerDataHandler {
                 rs = ps.executeQuery();
 
                 if (rs.next()) {
-                    items = buildItemStack(rs.getString("items"));
-                    armor = buildItemStack(rs.getString("armor"));
+                	if (hideInv == true){
+                		items = buildItemStack(rs.getString("items"));
+            			armor = buildItemStack(rs.getString("armor"));
+                	}else{
+                		items = null;
+                		armor = null;
+                	}
 
                     String rsLoc = rs.getString("location");
                     if (rsLoc != null) {
@@ -299,8 +307,6 @@ public class PlayerDataHandler {
             }
 
             PlayerInventory pInv = player.getInventory();
-            boolean hideInv = plugin.getConfig().getBoolean("guest.hide-inventory");
-            boolean hideLoc = plugin.getConfig().getBoolean("guest.protect-location");
 
             if (hideInv && items != null) {
                 // Fix for inventory extension plugins

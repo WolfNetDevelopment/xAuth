@@ -20,6 +20,7 @@
 package de.luricos.bukkit.xAuth.tasks;
 
 import de.luricos.bukkit.xAuth.xAuth;
+
 import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -74,11 +75,17 @@ public class xAuthTasks {
         if (!xAuth.getPlugin().isPremiumMode())
             return;
 
-        this.scheduleSyncDelayedTask(playerName, xAuthTask.xAuthTaskType.DELAYED_PREMIUM_CHECK, new DelayedPremiumCheck(playerName), 1);
+        this.scheduleAsyncDelayedTask(playerName, xAuthTask.xAuthTaskType.DELAYED_PREMIUM_CHECK, new DelayedPremiumCheck(playerName), 1);
     }
 
     public void scheduleSyncDelayedTask(String playerName, xAuthTask.xAuthTaskType taskType, BukkitRunnable runnable, long delay) {
         int taskId = Bukkit.getScheduler().scheduleSyncDelayedTask(xAuth.getPlugin(), runnable, delay);
+        this.playerTaskList.put(taskId, new xAuthTask(playerName, taskId, taskType));
+    }
+    
+    //Depreceted metod! 
+    public void scheduleAsyncDelayedTask(String playerName, xAuthTask.xAuthTaskType taskType, BukkitRunnable runnable, long delay) {
+        int taskId = Bukkit.getScheduler().scheduleAsyncDelayedTask(xAuth.getPlugin(), runnable, delay);
         this.playerTaskList.put(taskId, new xAuthTask(playerName, taskId, taskType));
     }
 
