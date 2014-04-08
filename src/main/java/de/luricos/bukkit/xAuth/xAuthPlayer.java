@@ -17,9 +17,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.luricos.bukkit.xAuth;
+package main.java.de.luricos.bukkit.xAuth;
 
-import de.luricos.bukkit.xAuth.password.PasswordType;
+import main.java.de.luricos.bukkit.xAuth.password.PasswordType;
+
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -35,6 +36,9 @@ public class xAuthPlayer {
     private Timestamp lastNotifyTime;
     private Timestamp loginTime;
     private GameMode gameMode;
+    private String registerDate;
+    private String lastLoginIP;
+    private String registerIP;
     private boolean isProtected = false;
     private boolean isLocked = true;
     private boolean isReset = false;
@@ -43,14 +47,14 @@ public class xAuthPlayer {
     private Timestamp connectTime;
 
     public xAuthPlayer(String playerName) {
-        this(playerName, -1, true, false, Status.GUEST, PasswordType.DEFAULT.getTypeId(), false, Bukkit.getDefaultGameMode());
+        this(playerName, -1, true, false, Status.GUEST, PasswordType.DEFAULT.getTypeId(), false, Bukkit.getDefaultGameMode(), null, null, null);
     }
 
     public xAuthPlayer(String playerName, int accountId) {
-        this(playerName, accountId, true, false, Status.GUEST, PasswordType.DEFAULT.getTypeId(), false, Bukkit.getDefaultGameMode());
+        this(playerName, accountId, true, false, Status.GUEST, PasswordType.DEFAULT.getTypeId(), false, Bukkit.getDefaultGameMode(), xAuth.getPlugin().getPlayerManager().getRegisterDate(accountId), xAuth.getPlugin().getPlayerManager().getLastLoginIP(accountId), xAuth.getPlugin().getPlayerManager().getRegisterIP(accountId));
     }
 
-    public xAuthPlayer(String playerName, int accountId, boolean locked, boolean isReset, Status status, int pwType, boolean isPremium, GameMode gameMode) {
+    public xAuthPlayer(String playerName, int accountId, boolean locked, boolean isReset, Status status, int pwType, boolean isPremium, GameMode gameMode, String registerDate, String lastLoginIP, String registerIP) {
         this.playerName = playerName;
         this.accountId = accountId;
         this.isLocked = locked;
@@ -59,6 +63,9 @@ public class xAuthPlayer {
         this.status = status;
         this.pwType = PasswordType.getType(pwType);
         this.gameMode = gameMode;
+        this.registerDate = registerDate;
+        this.lastLoginIP = lastLoginIP;
+        this.registerIP = registerIP;
     }
 
     public String getName() {
@@ -209,7 +216,19 @@ public class xAuthPlayer {
             return null;
         }
     }
-
+    
+	public String getRegisterDate() {
+		return this.registerDate;
+	}
+	
+	public String getLastLoginIP() {
+		return this.lastLoginIP;
+	}
+	
+	public String getRegisterIP() {
+		return this.registerIP;
+	}
+	
     public Location getLocation() {
         return getPlayer().getLocation();
     }
@@ -227,4 +246,5 @@ public class xAuthPlayer {
         REGISTERED, // registered but not logged in
         AUTHENTICATED // logged in
     }
+
 }
