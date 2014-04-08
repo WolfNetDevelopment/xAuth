@@ -27,6 +27,7 @@ import de.luricos.bukkit.xAuth.utils.CommandLineTokenizer;
 import de.luricos.bukkit.xAuth.utils.xAuthLog;
 import de.luricos.bukkit.xAuth.xAuth;
 import de.luricos.bukkit.xAuth.xAuthPlayer;
+
 import org.bukkit.ChatColor;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
@@ -559,7 +560,10 @@ public class xAuthAdminCommands extends xAuthCommand implements CommandExecutor 
         String message = "";
 
         sb.append(ChatColor.WHITE + "Account-Id : ").append(xp.getAccountId()).append("\n");
-        sb.append(ChatColor.WHITE + "Registered : ").append(((xp.isRegistered()) ? "{true}" : "{false}"));
+        sb.append(ChatColor.WHITE + "Register date : ").append(xp.getRegisterDate()).append("\n");
+        sb.append(ChatColor.WHITE + "Register IP : ").append(xp.getRegisterIP()).append("\n");
+        sb.append(ChatColor.WHITE + "Registered : ").append(((xp.isRegistered()) ? "{true}" : "{false}"));      
+
 
         if (xp.isRegistered()) {
             sb.append("\n");
@@ -579,6 +583,7 @@ public class xAuthAdminCommands extends xAuthCommand implements CommandExecutor 
 
             if (xp.getLoginTime() != null)
                 sb.append(ChatColor.WHITE + "Last login: ").append(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(xp.getLoginTime()));
+            	sb.append(ChatColor.WHITE + "Last login IP: ").append(xp.getLastLoginIP()).append("\n");
         }
 
         message = sb.toString()

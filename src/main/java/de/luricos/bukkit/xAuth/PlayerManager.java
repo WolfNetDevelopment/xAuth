@@ -30,6 +30,7 @@ import de.luricos.bukkit.xAuth.tasks.xAuthTasks;
 import de.luricos.bukkit.xAuth.updater.HTTPRequest;
 import de.luricos.bukkit.xAuth.utils.xAuthLog;
 import de.luricos.bukkit.xAuth.utils.xAuthUtils;
+
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
@@ -136,7 +137,7 @@ public class PlayerManager {
 
             addPlayerId(rs.getInt("id"), playerName);
 
-            return new xAuthPlayer(playerName, rs.getInt("id"), !rs.getBoolean("active"), rs.getBoolean("resetpw"), xAuthPlayer.Status.REGISTERED, rs.getInt("pwtype"), rs.getBoolean("premium"), GameMode.valueOf(plugin.getConfig().getString("guest.gamemode", Bukkit.getDefaultGameMode().name())));
+            return new xAuthPlayer(playerName, rs.getInt("id"), !rs.getBoolean("active"), rs.getBoolean("resetpw"), xAuthPlayer.Status.REGISTERED, rs.getInt("pwtype"), rs.getBoolean("premium"), GameMode.valueOf(plugin.getConfig().getString("guest.gamemode", Bukkit.getDefaultGameMode().name())), rs.getString("registerdate"), rs.getString("lastloginip"), rs.getString("registerip"));
         } catch (SQLException e) {
             xAuthLog.severe(String.format("Failed to load player: %s", playerName), e);
             return null;
@@ -390,6 +391,66 @@ public class PlayerManager {
         }
     }
 
+    public String getRegisterDate(int id) {
+    	Connection conn = plugin.getDatabaseController().getConnection();
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        try {
+            String sql = String.format("SELECT `registerdate` FROM `%s` WHERE `id` = ?",
+                    plugin.getDatabaseController().getTable(Table.ACCOUNT));
+            ps = conn.prepareStatement(sql);
+            ps.setInt(1, id);
+            rs = ps.executeQuery();
+            return rs.getString("registerdate");
+        } catch (SQLException e) {
+            xAuthLog.severe("Failed to check registerdate of account: " + id, e);
+            return null;
+        } finally {
+            plugin.getDatabaseController().close(conn, ps, rs);
+        }
+    }
+
+    public String getLastLoginIP(int id) {
+    	Connection conn = plugin.getDatabaseController().getConnection();
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        try {
+            String sql = String.format("SELECT `lastloginip` FROM `%s` WHERE `id` = ?",
+                    plugin.getDatabaseController().getTable(Table.ACCOUNT));
+            ps = conn.prepareStatement(sql);
+            ps.setInt(1, id);
+            rs = ps.executeQuery();
+            return rs.getString("lastloginip");
+        } catch (SQLException e) {
+            xAuthLog.severe("Failed to check lastloginip of account: " + id, e);
+            return null;
+        } finally {
+            plugin.getDatabaseController().close(conn, ps, rs);
+        }
+    }
+    
+    public String getRegisterIP(int id) {
+    	Connection conn = plugin.getDatabaseController().getConnection();
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        try {
+            String sql = String.format("SELECT `registerip` FROM `%s` WHERE `id` = ?",
+                    plugin.getDatabaseController().getTable(Table.ACCOUNT));
+            ps = conn.prepareStatement(sql);
+            ps.setInt(1, id);
+            rs = ps.executeQuery();
+            return rs.getString("registerip");
+        } catch (SQLException e) {
+            xAuthLog.severe("Failed to check registerip of account: " + id, e);
+            return null;
+        } finally {
+            plugin.getDatabaseController().close(conn, ps, rs);
+        }
+    }
+    
     public boolean activateAcc(int id) {
         return setActiveState(id, true);
     }
