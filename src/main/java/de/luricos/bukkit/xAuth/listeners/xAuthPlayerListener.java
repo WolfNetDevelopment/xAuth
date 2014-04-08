@@ -220,7 +220,7 @@ public class xAuthPlayerListener extends xAuthEventListener {
     }
 
 
-    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onPlayerDropItem(final PlayerDropItemEvent event) {
         if (xAuth.getPlugin().getConfig().getBoolean("guest.hide-inventory"))
             return;

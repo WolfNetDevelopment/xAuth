@@ -17,21 +17,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package main.java.de.luricos.bukkit.xAuth;
+package de.luricos.bukkit.xAuth;
 
-import main.java.de.luricos.bukkit.xAuth.commands.xAuthPlayerCountType;
-import main.java.de.luricos.bukkit.xAuth.database.Table;
-import main.java.de.luricos.bukkit.xAuth.events.xAuthPlayerDropItemEvent;
-import main.java.de.luricos.bukkit.xAuth.events.xAuthPlayerProtectEvent;
-import main.java.de.luricos.bukkit.xAuth.events.xAuthPlayerUnProtectEvent;
-import main.java.de.luricos.bukkit.xAuth.exceptions.xAuthPlayerUnprotectException;
-import main.java.de.luricos.bukkit.xAuth.restrictions.PlayerRestrictionHandler;
-import main.java.de.luricos.bukkit.xAuth.tasks.xAuthTask;
-import main.java.de.luricos.bukkit.xAuth.tasks.xAuthTasks;
-import main.java.de.luricos.bukkit.xAuth.updater.HTTPRequest;
-import main.java.de.luricos.bukkit.xAuth.utils.xAuthLog;
-import main.java.de.luricos.bukkit.xAuth.utils.xAuthUtils;
-
+import de.luricos.bukkit.xAuth.commands.xAuthPlayerCountType;
+import de.luricos.bukkit.xAuth.database.Table;
+import de.luricos.bukkit.xAuth.events.xAuthPlayerProtectEvent;
+import de.luricos.bukkit.xAuth.events.xAuthPlayerUnProtectEvent;
+import de.luricos.bukkit.xAuth.exceptions.xAuthPlayerUnprotectException;
+import de.luricos.bukkit.xAuth.restrictions.PlayerRestrictionHandler;
+import de.luricos.bukkit.xAuth.tasks.xAuthTask;
+import de.luricos.bukkit.xAuth.tasks.xAuthTasks;
+import de.luricos.bukkit.xAuth.updater.HTTPRequest;
+import de.luricos.bukkit.xAuth.utils.xAuthLog;
+import de.luricos.bukkit.xAuth.utils.xAuthUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
@@ -138,7 +136,7 @@ public class PlayerManager {
 
             addPlayerId(rs.getInt("id"), playerName);
 
-            return new xAuthPlayer(playerName, rs.getInt("id"), !rs.getBoolean("active"), rs.getBoolean("resetpw"), xAuthPlayer.Status.REGISTERED, rs.getInt("pwtype"), rs.getBoolean("premium"), GameMode.valueOf(plugin.getConfig().getString("guest.gamemode", Bukkit.getDefaultGameMode().name())), rs.getString("registerdate"), rs.getString("lastloginip"), rs.getString("registerip"));
+            return new xAuthPlayer(playerName, rs.getInt("id"), !rs.getBoolean("active"), rs.getBoolean("resetpw"), xAuthPlayer.Status.REGISTERED, rs.getInt("pwtype"), rs.getBoolean("premium"), GameMode.valueOf(plugin.getConfig().getString("guest.gamemode", Bukkit.getDefaultGameMode().name())));
         } catch (SQLException e) {
             xAuthLog.severe(String.format("Failed to load player: %s", playerName), e);
             return null;
@@ -260,7 +258,6 @@ public class PlayerManager {
         xp.setProtected(true);
 
         this.callEvent(xAuthPlayerProtectEvent.Action.PLAYER_PROTECTED);
-        //this.callEvent(xAuthPlayerDropItemEvent.Action.ITEMDROP_DENIED);
     }
 
     public void unprotect(final xAuthPlayer xp) {
@@ -392,67 +389,7 @@ public class PlayerManager {
             plugin.getDatabaseController().close(conn, ps, rs);
         }
     }
-    
-    public String getRegisterDate(int id) {
-    	Connection conn = plugin.getDatabaseController().getConnection();
-        PreparedStatement ps = null;
-        ResultSet rs = null;
 
-        try {
-            String sql = String.format("SELECT `registerdate` FROM `%s` WHERE `id` = ?",
-                    plugin.getDatabaseController().getTable(Table.ACCOUNT));
-            ps = conn.prepareStatement(sql);
-            ps.setInt(1, id);
-            rs = ps.executeQuery();
-            return rs.getString("registerdate");
-        } catch (SQLException e) {
-            xAuthLog.severe("Failed to check registerdate of account: " + id, e);
-            return null;
-        } finally {
-            plugin.getDatabaseController().close(conn, ps, rs);
-        }
-    }
-
-    public String getLastLoginIP(int id) {
-    	Connection conn = plugin.getDatabaseController().getConnection();
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-
-        try {
-            String sql = String.format("SELECT `lastloginip` FROM `%s` WHERE `id` = ?",
-                    plugin.getDatabaseController().getTable(Table.ACCOUNT));
-            ps = conn.prepareStatement(sql);
-            ps.setInt(1, id);
-            rs = ps.executeQuery();
-            return rs.getString("lastloginip");
-        } catch (SQLException e) {
-            xAuthLog.severe("Failed to check lastloginip of account: " + id, e);
-            return null;
-        } finally {
-            plugin.getDatabaseController().close(conn, ps, rs);
-        }
-    }
-    
-    public String getRegisterIP(int id) {
-    	Connection conn = plugin.getDatabaseController().getConnection();
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-
-        try {
-            String sql = String.format("SELECT `registerip` FROM `%s` WHERE `id` = ?",
-                    plugin.getDatabaseController().getTable(Table.ACCOUNT));
-            ps = conn.prepareStatement(sql);
-            ps.setInt(1, id);
-            rs = ps.executeQuery();
-            return rs.getString("registerip");
-        } catch (SQLException e) {
-            xAuthLog.severe("Failed to check registerip of account: " + id, e);
-            return null;
-        } finally {
-            plugin.getDatabaseController().close(conn, ps, rs);
-        }
-    }
-    
     public boolean activateAcc(int id) {
         return setActiveState(id, true);
     }

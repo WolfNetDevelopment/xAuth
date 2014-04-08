@@ -17,10 +17,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package main.java.de.luricos.bukkit.xAuth.tasks;
+package de.luricos.bukkit.xAuth.tasks;
 
-import main.java.de.luricos.bukkit.xAuth.xAuth;
-
+import de.luricos.bukkit.xAuth.xAuth;
 import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -75,16 +74,11 @@ public class xAuthTasks {
         if (!xAuth.getPlugin().isPremiumMode())
             return;
 
-        this.scheduleAsyncDelayedTask(playerName, xAuthTask.xAuthTaskType.DELAYED_PREMIUM_CHECK, new DelayedPremiumCheck(playerName), 1);
+        this.scheduleSyncDelayedTask(playerName, xAuthTask.xAuthTaskType.DELAYED_PREMIUM_CHECK, new DelayedPremiumCheck(playerName), 1);
     }
 
     public void scheduleSyncDelayedTask(String playerName, xAuthTask.xAuthTaskType taskType, BukkitRunnable runnable, long delay) {
         int taskId = Bukkit.getScheduler().scheduleSyncDelayedTask(xAuth.getPlugin(), runnable, delay);
-        this.playerTaskList.put(taskId, new xAuthTask(playerName, taskId, taskType));
-    }
-    
-    public void scheduleAsyncDelayedTask(String playerName, xAuthTask.xAuthTaskType taskType, BukkitRunnable runnable, long delay) {
-        int taskId = Bukkit.getScheduler().scheduleAsyncDelayedTask(xAuth.getPlugin(), runnable, delay);
         this.playerTaskList.put(taskId, new xAuthTask(playerName, taskId, taskType));
     }
 
