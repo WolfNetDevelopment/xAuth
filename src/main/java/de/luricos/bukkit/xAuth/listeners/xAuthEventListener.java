@@ -121,8 +121,8 @@ public class xAuthEventListener implements Listener {
         Bukkit.getPluginManager().callEvent(event);
     }
 
-    protected void callEvent(final xAuthPlayerJoinEvent.Action action) {
-        this.callEvent(new xAuthPlayerJoinEvent(action));
+    protected void callEvent(final xAuthPlayerJoinEvent.Action action, xAuthPlayer player) {
+        this.callEvent(new xAuthPlayerJoinEvent(action, player));
     }
 
     protected void callEvent(final xAuthPlayerLoginEvent event) {

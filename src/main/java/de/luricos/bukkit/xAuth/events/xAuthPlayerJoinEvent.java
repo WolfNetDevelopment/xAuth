@@ -21,17 +21,25 @@ package de.luricos.bukkit.xAuth.events;
 
 import org.bukkit.event.HandlerList;
 
+import de.luricos.bukkit.xAuth.xAuthPlayer;
+
 /**
  * @author lycano
  */
 public class xAuthPlayerJoinEvent extends xAuthEvent {
     protected Action action;
     private static final HandlerList handlers = new HandlerList();
+    protected xAuthPlayer player = null;
 
     public xAuthPlayerJoinEvent(Action action) {
+    	this(action, null);
+    }
+    
+    public xAuthPlayerJoinEvent(Action action, xAuthPlayer player) {
         super(action.toString());
 
         this.action = action;
+        this.player = player;
     }
 
     public Action getAction() {
@@ -49,5 +57,10 @@ public class xAuthPlayerJoinEvent extends xAuthEvent {
 
     public enum Action {
         PLAYER_JOINED
+    }
+    
+    public xAuthPlayer getPlayer()
+    {
+    	return player;
     }
 }

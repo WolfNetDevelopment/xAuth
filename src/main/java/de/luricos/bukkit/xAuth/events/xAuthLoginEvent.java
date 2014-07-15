@@ -28,14 +28,20 @@ import org.bukkit.event.HandlerList;
 public class xAuthLoginEvent extends xAuthEvent {
     protected Action action;
     protected xAuthPlayer.Status status;
+    protected xAuthPlayer player;
 
     private static final HandlerList handlers = new HandlerList();
-
+    
     public xAuthLoginEvent(Action action, xAuthPlayer.Status status) {
+    	this(action, status, null);    	
+    }
+
+    public xAuthLoginEvent(Action action, xAuthPlayer.Status status, xAuthPlayer player) {
         super(action.toString());
 
         this.action = action;
         this.status = status;
+        this.player = player;
     }
 
     public Action getAction() {
@@ -57,5 +63,10 @@ public class xAuthLoginEvent extends xAuthEvent {
 
     public enum Action {
         PLAYER_LOGIN
+    }
+    
+    public xAuthPlayer getPlayer()
+    {
+    	return player;
     }
 }

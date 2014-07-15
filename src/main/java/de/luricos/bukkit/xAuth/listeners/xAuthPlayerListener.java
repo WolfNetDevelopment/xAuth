@@ -128,7 +128,7 @@ public class xAuthPlayerListener extends xAuthEventListener {
 
         playerManager.getTasks().scheduleDelayedPremiumCheck(playerName);
 
-        this.callEvent(xAuthPlayerJoinEvent.Action.PLAYER_JOINED);
+        this.callEvent(xAuthPlayerJoinEvent.Action.PLAYER_JOINED, xp);
     }
 
     @EventHandler(priority = EventPriority.MONITOR)

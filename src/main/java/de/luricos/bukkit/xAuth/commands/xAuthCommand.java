@@ -48,8 +48,8 @@ public class xAuthCommand {
         Bukkit.getPluginManager().callEvent(event);
     }
 
-    protected void callEvent(final xAuthLoginEvent.Action action, final xAuthPlayer.Status status) {
-        this.callEvent(new xAuthLoginEvent(action, status));
+    protected void callEvent(final xAuthLoginEvent.Action action, final xAuthPlayer.Status status, xAuthPlayer player) {
+        this.callEvent(new xAuthLoginEvent(action, status, player));
     }
 
     protected void callEvent(final xAuthLogoutEvent event) {

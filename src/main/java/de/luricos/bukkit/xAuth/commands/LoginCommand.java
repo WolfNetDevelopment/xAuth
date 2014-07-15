@@ -69,7 +69,7 @@ public class LoginCommand extends xAuthCommand implements CommandExecutor {
                 response = "login.success";
                 a.online(playerName);
 
-                this.callEvent(xAuthLoginEvent.Action.PLAYER_LOGIN, xp.getStatus());
+                this.callEvent(xAuthLoginEvent.Action.PLAYER_LOGIN, xp.getStatus(), xp);
 
                 xAuthLog.info(playerName + " authenticated");
             } else {
