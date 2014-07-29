@@ -264,6 +264,19 @@ public class xAuthPlayerListener extends xAuthEventListener {
         this.callEvent(xAuthPlayerInteractEvent.Action.INTERACT_DENIED, xp.getStatus());
     }
 
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = false)
+    public void onPlayerShootBowEvent(final EntityShootBowEvent event) {
+    	if(event.getEntity() instanceof Player){
+    		Player player = (Player)event.getEntity();
+            if (this.isAllowed(player, event, player))
+                return;
+    
+            event.setCancelled(true);
+            
+            this.callEvent(xAuthPlayerInteractEvent.Action.INTERACT_DENIED, playerManager.getPlayer(player.getName()).getStatus());
+    	}
+    }
+
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onPlayerMove(PlayerMoveEvent event) {
         // do nothing if player hasn't moved a block or world.
