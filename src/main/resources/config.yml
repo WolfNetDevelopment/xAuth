@@ -81,6 +81,7 @@ guest:
         entity:
             damage: true
             target: true
+            shoot: true
 session:
     length: 3600
     verifyip: true
